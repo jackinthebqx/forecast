@@ -2,14 +2,7 @@ ID: forecast
 _schema-version: '2.1'
 version: 0.0.1
 modules:
-  - name: forecast-db
-    type: hdb
-    path: db
-    parameters:
-      memory: 256M
-      disk-quota: 256M
-    requires:
-      - name: forecast-hdi-container
+  
   - name: forecast-srv
     type: nodejs
     path: srv
@@ -22,8 +15,24 @@ modules:
           url: '${default-url}'
     requires:
       - name: forecast-hdi-container
+
+  - name: db
+    type: hdb
+    path: db
+    requires:
+     - name: hdi_db
+
 resources:
   - name: forecast-hdi-container
     properties:
       hdi-container-name: '${service-name}'
     type: com.sap.xs.hdi-container
+
+  - name: hdi_db
+    parameters:
+       config:
+          schema: ml
+    properties:
+       hdi-container-name_2: ${service-name}
+    type: com.sap.xs.hdi-container
+
